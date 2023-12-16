@@ -26,11 +26,11 @@ public class EmployeeServiceImpl implements EmployeeService {
 	}
 
 	@Override
-	public EmployeeResponse addEmployee(EmployeeDTO employeeDTO) {
+	public EmployeeDTO addEmployee(EmployeeDTO employeeDTO) {
 		// TODO Auto-generated method stub
 		Employee employee = mapToEntity(employeeDTO);
 		Employee empResponse = repository.save(employee);
-		return mapEntityToResponse(empResponse);
+		return mapToDTO(empResponse);
 	}
 
 	@Override
@@ -57,45 +57,46 @@ public class EmployeeServiceImpl implements EmployeeService {
 	private EmployeeResponse mapEntityToResponse(Employee employee) {
 		EmployeeResponse response = modelMapper.map(employee, EmployeeResponse.class);
 		long salary = employee.getSalary();
-		long yearlySalary = salary*12;
-		if(employee.getDOJ().after(new Date(2023,04,01))) {
+		long yearlySalary = salary * 12;
+		if (employee.getDOJ().after(new Date(2023, 04, 01))) {
 			int days = employee.getDOJ().getDay();
 			int months = employee.getDOJ().getMonth();
-			long salaryDeduct = days * salary/30 + (months-4)*salary;
+			long salaryDeduct = days * salary / 30 + (months - 4) * salary;
 			yearlySalary -= salaryDeduct;
 		}
 		response.setTaxAmount(taxCalculator(yearlySalary));
 		long cessAmount = 0;
-		
-		if(yearlySalary>2500000) {
-			cessAmount = (yearlySalary-25000000)/50;
+
+		if (yearlySalary > 2500000) {
+			cessAmount = (yearlySalary - 25000000) / 50;
 		}
 		response.setCessAmount(cessAmount);
 		return response;
 	}
+
 	private long taxCalculator(long salary) {
 		long tax = 0;
-		long taxTier1=0;
-		long taxTier2=0;
-		long taxTier3=0;
-		if(salary>250000) {
-			taxTier1 = (salary-250000)/20;
+		long taxTier1 = 0;
+		long taxTier2 = 0;
+		long taxTier3 = 0;
+		if (salary > 250000) {
+			taxTier1 = (salary - 250000) / 20;
 			tax = taxTier1;
 		}
-		if(salary>500000) {
-			taxTier2 = taxTier1+(salary-500000)/10;
+		if (salary > 500000) {
+			taxTier2 = taxTier1 + (salary - 500000) / 10;
 			tax = taxTier2;
 		}
-		if(salary>1000000) {
-			taxTier3 = taxTier2 + (salary-1000000)/5;
-			tax =taxTier3;
+		if (salary > 1000000) {
+			taxTier3 = taxTier2 + (salary - 1000000) / 5;
+			tax = taxTier3;
 		}
 		return tax;
 	}
-	/*
-	 * private EmployeeDTO mapToDTO(Employee employee) { return
-	 * modelMapper.map(employee, EmployeeDTO.class); }
-	 */
+
+	private EmployeeDTO mapToDTO(Employee employee) {
+		return modelMapper.map(employee, EmployeeDTO.class);
+	}
 
 	/*
 	 * private EmployeeResponse mapDtoToResponse(EmployeeDTO employeeDTO) {

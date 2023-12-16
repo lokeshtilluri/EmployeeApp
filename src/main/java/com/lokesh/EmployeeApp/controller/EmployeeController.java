@@ -24,7 +24,7 @@ public class EmployeeController {
 		this.service = service;
 	}
 	@PostMapping("/addEmployee")
-	private EmployeeResponse addEmployee(@Valid @RequestBody EmployeeDTO employeeDTO) {
+	private EmployeeDTO addEmployee(@Valid @RequestBody EmployeeDTO employeeDTO) {
 		return service.addEmployee(employeeDTO);
 	}
 	@GetMapping("/allEmployees")
