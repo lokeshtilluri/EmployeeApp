@@ -6,7 +6,7 @@ import com.lokesh.EmployeeApp.payload.EmployeeDTO;
 import com.lokesh.EmployeeApp.payload.EmployeeResponse;
 
 public interface EmployeeService {
-	EmployeeDTO addEmployee(EmployeeDTO employeeDTO);
+	EmployeeResponse addEmployee(EmployeeDTO employeeDTO);
 	List<EmployeeResponse> getEmployees();
 	EmployeeResponse getEmployeeById(Long id);
 }
