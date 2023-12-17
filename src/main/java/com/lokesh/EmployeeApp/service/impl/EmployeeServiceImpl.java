@@ -1,5 +1,7 @@
 package com.lokesh.EmployeeApp.service.impl;
 
+import java.time.LocalDate;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,11 +28,12 @@ public class EmployeeServiceImpl implements EmployeeService {
 	}
 
 	@Override
-	public EmployeeResponse addEmployee(EmployeeDTO employeeDTO) {
+	public String addEmployee(EmployeeDTO employeeDTO) {
 		// TODO Auto-generated method stub
 		Employee employee = mapToEntity(employeeDTO);
 		Employee empResponse = repository.save(employee);
-		return mapEntityToResponse(empResponse);
+		if(empResponse != null) return "Employee added succesfully";
+		else return "Please provide valid data";
 	}
 
 	@Override
@@ -54,44 +57,54 @@ public class EmployeeServiceImpl implements EmployeeService {
 		return modelMapper.map(employeeDTO, Employee.class);
 	}
 
-	private EmployeeResponse mapEntityToResponse(Employee employee) {
+	private EmployeeResponse mapEntityToResponse(Employee employee){
+
 		EmployeeResponse response = modelMapper.map(employee, EmployeeResponse.class);
 		long salary = employee.getSalary();
-		long yearlySalary = salary*12;
-		if(employee.getDOJ().after(new Date(2023,04,01))) {
-			int days = employee.getDOJ().getDay();
-			int months = employee.getDOJ().getMonth();
-			long salaryDeduct = days * salary/30 + (months-4)*salary;
+		long yearlySalary = salary * 12;
+		java.sql.Date start = java.sql.Date.valueOf("2023-01-04");
+		java.sql.Date doj = response.getDoj();
+		LocalDate localDoj = doj.toLocalDate();
+		LocalDate localStart = start.toLocalDate();
+		if (doj.after(start)) {
+			int days = localDoj.getDayOfMonth()-1;
+			int months = localDoj.getMonthValue()-1;
+			if(months<=3 && localDoj.getYear()!=localStart.getYear()) {
+				months = months+9;
+			}
+			else {
+				months = months-4;
+			}
+			long salaryDeduct = (days) * salary / 30 + Math.abs((months)) * salary;
 			yearlySalary -= salaryDeduct;
 		}
 		response.setTaxAmount(taxCalculator(yearlySalary));
 		long cessAmount = 0;
-		
-		if(yearlySalary>2500000) {
-			cessAmount = (yearlySalary-25000000)/50;
+
+		if (yearlySalary > 2500000) {
+			cessAmount = (yearlySalary - 2500000) / 50;
 		}
 		response.setCessAmount(cessAmount);
 		return response;
 	}
+
 	private long taxCalculator(long salary) {
 		long tax = 0;
-		long taxTier1=0;
-		long taxTier2=0;
-		long taxTier3=0;
-		if(salary>250000) {
-			taxTier1 = (salary-250000)/20;
-			tax = taxTier1;
+		
+		if (salary > 250000 && salary<=500000) {
+			tax = (salary - 250000) / 20;
+			
 		}
-		if(salary>500000) {
-			taxTier2 = taxTier1+(salary-500000)/10;
-			tax = taxTier2;
+		else if (salary > 500000 && salary<=1000000) {
+			tax = (250000) / 20 + ((salary - 500000) / 10);
+			
 		}
-		if(salary>1000000) {
-			taxTier3 = taxTier2 + (salary-1000000)/5;
-			tax =taxTier3;
+		else if (salary > 1000000) {
+			tax = (250000) / 20 + 500000 / 10 + ((salary - 1000000) / 5);
 		}
 		return tax;
 	}
+
 	/*
 	 * private EmployeeDTO mapToDTO(Employee employee) { return
 	 * modelMapper.map(employee, EmployeeDTO.class); }

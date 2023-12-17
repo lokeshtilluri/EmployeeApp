@@ -1,6 +1,5 @@
 package com.lokesh.EmployeeApp.payload;
 
-import java.util.Date;
 import java.util.List;
 
 import jakarta.validation.constraints.Digits;
@@ -26,8 +25,8 @@ public class EmployeeDTO {
 	@Email(message = "please enter valid email")
 	@Size(min=8,message="please enter valid email")
 	private String email;
-	private List<Integer> phoneNumbers;
-	private Date DOJ;
+	private List<String> phoneNumbers;
+	private java.sql.Date DOJ;
 	@Digits(integer=20,fraction=0)
 	private Long salary;
 	private String taxAmount;
