@@ -1,6 +1,5 @@
 package com.lokesh.EmployeeApp.entity;
 
-import java.util.Date;
 import java.util.List;
 
 import jakarta.persistence.CollectionTable;
@@ -27,9 +26,9 @@ public class Employee {
 	private String firstName;
 	private String lastName;
 	private String email;
-	@ElementCollection(targetClass = Integer.class,fetch = FetchType.EAGER)
-	@CollectionTable(name="employee_phone_numbers",joinColumns = @JoinColumn(name="employeeId"))
-	private List<Integer> phoneNumbers;
-	private Date DOJ;
+	@ElementCollection(fetch = FetchType.EAGER)
+	@CollectionTable(name="employee_phone_numbers",joinColumns = @JoinColumn(name="employee_id"))
+	private List<String> phoneNumbers;
+	private java.sql.Date DOJ;
 	private Long salary;
 }

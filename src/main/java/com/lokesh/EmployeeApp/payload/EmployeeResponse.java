@@ -14,6 +14,7 @@ public class EmployeeResponse {
 	private String firstName;
 	private String lastName;
 	private Long salary;
+	private java.sql.Date doj;
 	private long taxAmount;
 	private long cessAmount;
 }

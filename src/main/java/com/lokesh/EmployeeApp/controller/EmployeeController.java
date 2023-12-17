@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.lokesh.EmployeeApp.payload.EmployeeDTO;
@@ -24,7 +23,8 @@ public class EmployeeController {
 		this.service = service;
 	}
 	@PostMapping("/addEmployee")
-	private EmployeeResponse addEmployee(@Valid @RequestBody EmployeeDTO employeeDTO) {
+	private String addEmployee(@Valid @RequestBody EmployeeDTO employeeDTO) {
+//		/employeeDTO.setPhoneNumbers(Arrays.asList(964028789,688695797));
 		return service.addEmployee(employeeDTO);
 	}
 	@GetMapping("/allEmployees")
