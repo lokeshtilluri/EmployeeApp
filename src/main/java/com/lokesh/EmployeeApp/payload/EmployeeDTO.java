@@ -18,10 +18,10 @@ import lombok.Setter;
 public class EmployeeDTO {
 	private Long employeeId;
 	@NotBlank
-	@Size(min=5, message="First name should be atleast 5 characters")
+	@Size(min=3, message="First name should be atleast 5 characters")
 	private String firstName;
 	@NotBlank
-	@Size(min = 5,message="Last name should be atleast 5 characters")
+	@Size(min = 3,message="Last name should be atleast 5 characters")
 	private String lastName;
 	@Email(message = "please enter valid email")
 	@Size(min=8,message="please enter valid email")
@@ -30,6 +30,4 @@ public class EmployeeDTO {
 	private java.sql.Date DOJ;
 	@Digits(integer=20,fraction=0)
 	private Long salary;
-	private String taxAmount;
-	private String cessAmount;
 }
